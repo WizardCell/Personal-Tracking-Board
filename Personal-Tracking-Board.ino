@@ -23,8 +23,8 @@ FirebaseData fbdo;
 FirebaseAuth auth;
 FirebaseConfig config;
 
-char ssid[] = "Galaxy S23 Ultra 38B1";  // Nama Wifi Anda
-char pass[] = "mossa1903";              // Password Wifi Anda
+char ssid[] = "Galaxy S23 Ultra 38B1";  // Name of wifi network
+char pass[] = "mossa1903";              // Password of wifi network
 const char* projectId = "boardd-7e40f";
 const char* apiKey = "AIzaSyCUkWepwXNQHOU3SlbSzbXqOhd4Ib49ekQ";
 const char* collectionPath = "users";  // Your Firestore collection name
