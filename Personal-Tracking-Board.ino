@@ -4,15 +4,30 @@
 
 #include "ESP32-HUB75-MatrixPanel-I2S-DMA.h"
 
+#include <WiFiManager.h>
 #include <WiFi.h>
+
+ WiFiManager wifiManager;
+
 #include <HTTPClient.h>
 #include <FirebaseESP32.h>
 #include <ArduinoJson.h>
 
+// Create an instance of the matrix panel
 MatrixPanel_I2S_DMA* dma_display = nullptr;
 #define PANEL_RES_X 64  // Number of pixels wide of each INDIVIDUAL panel module.
 #define PANEL_RES_Y 64  // Number of pixels tall of each INDIVIDUAL panel module.
 #define PANEL_CHAIN 1   // Total number of panels chained one to another
+
+// Module configuration
+  HUB75_I2S_CFG mxconfig(
+    PANEL_RES_X,  // module width
+    PANEL_RES_Y,  // module height
+    PANEL_CHAIN   // Chain length
+  );
+
+  
+
 
 #define DATABASE_URL "https://boardd-7e40f-default-rtdb.firebaseio.com/"
 #define API_KEY "AIzaSyCUkWepwXNQHOU3SlbSzbXqOhd4Ib49ekQ"
@@ -23,8 +38,8 @@ FirebaseData fbdo;
 FirebaseAuth auth;
 FirebaseConfig config;
 
-char ssid[] = "Galaxy S23 Ultra 38B1";  // Name of wifi network
-char pass[] = "mossa1903";              // Password of wifi network
+//char ssid[] = "Iphone Haifa";  // Name of wifi network
+//char pass[] = "1234567890";              // Password of wifi network
 const char* projectId = "boardd-7e40f";
 const char* apiKey = "AIzaSyCUkWepwXNQHOU3SlbSzbXqOhd4Ib49ekQ";
 const char* collectionPath = "users";  // Your Firestore collection name
@@ -147,42 +162,29 @@ void dofw_text()
   //dma_display->setFont();
 }
 
+
+
 void setup()
 {
   Serial.begin(115200);
 
+  mxconfig.gpio.e = 32;
+  mxconfig.clkphase = false;
+  mxconfig.driver = HUB75_I2S_CFG::FM6124;
+
+  // Show intro animation
+  //  showIntroAnimation();
+
+ //Push Button Configuration
   pinMode(BUTTON_PIN, INPUT_PULLUP);
 
-  Serial.print("Attempting to connect to Network named: ");
-
-  IPAddress dns(8, 8, 8, 8);
-  Serial.println(ssid);  // print the network name (SSID);
-
-  WiFi.begin(ssid, pass);
-  while (WiFi.status() != WL_CONNECTED)
-  {
-    Serial.print(".");
-    delay(1000);
-  }
-  Serial.println("");
-  IPAddress ip = WiFi.localIP();
-  Serial.print("IP Address: ");
-  Serial.println(ip);
+   // Try to connect to WiFi
+   connectToWiFi();
+   
 
   //configTime(TZ*3600, 0, "ntp.nict.jp", "ntp.jst.mfeed.ad.jp"); // enable NTP
   //configTime(TZ, 0, "ntp.nict.jp", "ntp.jst.mfeed.ad.jp");
   configTime(TZ, 0, "time.google.com");
-
-  // Module configuration
-  HUB75_I2S_CFG mxconfig(
-    PANEL_RES_X,  // module width
-    PANEL_RES_Y,  // module height
-    PANEL_CHAIN   // Chain length
-  );
-
-  mxconfig.gpio.e = 32;
-  mxconfig.clkphase = false;
-  mxconfig.driver = HUB75_I2S_CFG::FM6124;
 
   // Display Setup
   dma_display = new MatrixPanel_I2S_DMA(mxconfig);
@@ -265,8 +267,66 @@ void MakeHttpRequest()
   http.end();
 }
 
+void showIntroAnimation() {
+
+   // Display Setup
+  dma_display = new MatrixPanel_I2S_DMA(mxconfig);
+  dma_display->begin();
+  dma_display->setBrightness8(90);  //0-255
+  dma_display->clearScreen();
+
+  // Display "Welcome to Personal Tracking Board" in the middle-top
+
+
+    // Display "Configure Your Wifi" underneath
+   
+   
+}
+
+void connectToWiFi() {
+
+    Serial.print("Attempting to connect to Network named: ");
+    // Try to connect to saved WiFi credentials
+    if (!wifiManager.autoConnect("ESP32-AP")) {
+        Serial.println("Failed to connect and hit timeout");
+        // Reset and try again, or maybe put it to deep sleep
+        ESP.restart();
+    }
+
+    Serial.println("Connected to WiFi!");
+    Serial.print("IP Address: ");
+    Serial.println(WiFi.localIP());
+}
+
+void reconnectToWiFi(){
+   // Check if WiFi connection is still active
+  if (WiFi.status() != WL_CONNECTED) {
+        Serial.println("WiFi connection lost. Reconnecting...");
+        // Try to reconnect
+        WiFi.reconnect();
+        delay(5000); // Wait for 5 seconds before checking again
+        // If still not connected, initiate WiFiManager configuration portal
+        if (WiFi.status() != WL_CONNECTED) {
+            Serial.println("Attempting WiFiManager configuration...");
+            if (!wifiManager.startConfigPortal("ESP32-AP")) {
+                Serial.println("Failed to connect and hit timeout");
+                // Reset and try again, or maybe put it to deep sleep
+                ESP.restart();
+                delay(1000);
+            }
+            Serial.println("Connected to WiFi!");
+            Serial.print("IP Address: ");
+            Serial.println(WiFi.localIP());
+        }
+
+}}
+
+
 void loop()
 {
+  // Check if WiFi connection is still active
+  reconnectToWiFi();
+        
   // Read the state of the pushbutton value:
   buttonState = digitalRead(BUTTON_PIN);
 
@@ -278,18 +338,20 @@ void loop()
     dma_display->setCursor(15, 40);
     dma_display->setTextColor(dma_display->color444(0, 255, 255));
     dma_display->print("Khalid");
+  
+    
   }
   else
   {
-    Serial.println("Button is released");
+    //Serial.println("Button is released");
     dma_display->fillRect(2, 40, 60, 60, myBLACK);
   }
-  delay(100);
+ // delay(100);
 
-  if (WiFi.status() != WL_CONNECTED)
-  {
-    ESP.restart();
-  }
+  //if (WiFi.status() != WL_CONNECTED)
+  //{
+   // ESP.restart();
+ // }
 
   static time_t last_t;
   t = time(NULL);
