@@ -27,6 +27,7 @@ Personal tracking board, an Internet of Things (IOT) based project that helps tr
 - 1 $\times$ ESP32
 - 1 $\times$ HUB75 RGB LED Panel
 - 1 $\times$ Push Button
+- 1 $\times$ Power Button
 
 # Wiring Diagram
 ![Wiring Diagram](/Documentation/WiringDiagram.jpg)
