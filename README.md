@@ -8,7 +8,7 @@ Personal tracking board, an Internet of Things (IOT) based project that helps tr
 
 # Folder Structure of the Repository
 ```
-
+├── ESP - source code for the esp side (firmware).
 ├── Documentation - wiring diagram, state diagram, instructions, etc.
 ├── PARAMETERS.md - hard coded parameters of the project.
 ├── README.md - this file.
