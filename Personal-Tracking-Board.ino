@@ -706,21 +706,8 @@ void loop() {
     user_index++;
     firstTimeLoop = false;
   }
-   wifiManager.startConfigPortal("OnDemand-AP");
-  if (!portalStarted) {
-   // WiFi.reconnect();
-    //delay(200);
-    //if (WiFi.status() != WL_CONNECTED)
-   // WiFi.disconnect();
-    //wifiManager.autoConnect("ESP32-AP");
-   // wifiManager.startConfigPortal("OnDemand-AP");
-    portalStarted = true;
-     
-  }
-
-  if (WiFi.status() == WL_CONNECTED) {
-    portalStarted = false;
-  }
+  wifiManager.startConfigPortal("OnDemand-AP");
+ 
   wifiManager.process();
 
   // display Wifi status
