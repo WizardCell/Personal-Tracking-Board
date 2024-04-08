@@ -49,21 +49,23 @@ const char* apiKey = "AIzaSyBMhcicHhTv47Rgq2JGiJxfrl_bdUyzmbE";
 const char* collectionPath = "users";  // Your Firestore collection name
 #define TZ (+3 * 60 * 60)              //Timezone
 
+#define NTP_SERVER "il.pool.ntp.org"
+
 bool flasher = false;
 uint8_t r = 0, g = 0, b = 0;
 int h, m, s, d, yr;
 uint8_t month, dow;
 String text;
-unsigned int NewRTCh = 24;
-unsigned int NewRTCm = 60;
-unsigned int NewRTCs = 10;
+unsigned int NewRTCh = 24; // Number of hours in a single day.
+unsigned int NewRTCm = 60; // Number of Mintues in a single hour.
+
 time_t t;
 
 const char* wd[7] = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
 const char* months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 
 unsigned long previousMillis = 0;
-const long interval = 10000;  // Interval in milliseconds (1 seconds)
+const long interval = 10000;  // Interval in milliseconds (1 seconds) for sending periodic HTTP and NTP requests.
 
 // Digital pin for push-button
 #define BUTTON_PIN 18
@@ -100,13 +102,6 @@ void getTim() {
     b = random(0, 8);
   }
   
-  if (NewRTCs != s / 10) {
-    //dma_display->fillRect(51, 17, 13, 7, myBLACK);
-    NewRTCs = s / 10;
-    //dofw_text();
-  } else {
-    //dma_display->fillRect(58, 17, 6, 7, myBLACK);
-  }
   dma_display->fillRect(29, 0, 13, 8, myBLACK);
   dma_display->setCursor(30, 0);
   dma_display->setTextSize(1);
@@ -392,9 +387,9 @@ void reconnectToWiFi() {
 
 
 #define MONTHS_NUM 12  //Number of months in a single year
-#define INIT_X 1
-#define INIT_Y 28
-#define FIRST_MONTH_LAST_DAY_X 60
+#define INIT_X 1      // X coordinate for printing user's task progress.
+#define INIT_Y 28     // Y coordinate for printing user's task progress.
+#define FIRST_MONTH_LAST_DAY_X 60 // X coordinate for printing last day in the month.
 void drawPixelsForDate(const char* numbersOfYear, int day, int month) {
   int initX = INIT_X;
   int initY = INIT_Y;
@@ -604,8 +599,8 @@ void updateCurrentUser() {
   }
 }
 
-#define WIFI_ICON_X 52
-#define WIFI_ICON_Y 6
+#define WIFI_ICON_X 52 // X coordinate for printing wIFI icon.
+#define WIFI_ICON_Y 6 // Y coordinate for printing wIFI icon.
 
 void displayWiFiIcon(uint16_t color) {
 
@@ -680,7 +675,7 @@ void setup() {
   //configTime(TZ*3600, 0, "ntp.nict.jp", "ntp.jst.mfeed.ad.jp"); // enable NTP
   //configTime(TZ, 0, "ntp.nict.jp", "ntp.jst.mfeed.ad.jp");
  // configTime(TZ, 0, "time.google.com");
-  configTime(TZ, 0, "il.pool.ntp.org");
+  configTime(TZ, 0, NTP_SERVER);
 
 
   //  matrix.begin();                           // setup the LED matrix
@@ -743,7 +738,7 @@ void loop() {
     Serial.println("Button is pressed");
     switchToNextUser(user_index);
   }
-  delay(200);
+  delay(150);
   user_index++;
 }
 
