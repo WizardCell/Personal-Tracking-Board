@@ -1,6 +1,7 @@
 // REQUIRES the following Arduino libraries:
-// - ESP32 Firebase: https://github.com/Rupakpoddar/ESP32Firebase
-// - Arduino Json: https://github.com/Rupakpoddar/ESP32Firebase
+//- [ESP32 Firebase](https://github.com/Rupakpoddar/ESP32Firebase) - 1.0.0
+// - [ArduinoJson](https://arduinojson.org/) - 7.0.4
+// - [WiFiManger](https://github.com/tzapu/WiFiManager) - 2.0.17
 
 #include "ESP32-HUB75-MatrixPanel-I2S-DMA.h"
 
@@ -494,6 +495,21 @@ void displayNoUsers(){
 
 }
 
+void displaySpiffsReadError(){
+  dma_display->fillRect(0, 19, 64, 8, myBLACK);
+  dma_display->fillRect(0, 27, 64, 37, myBLACK);
+  dma_display->setCursor(8, 30);
+  dma_display->setTextColor(myMAGENTA);
+  dma_display->print("Failed To");
+  dma_display->setCursor(8, 40);
+  dma_display->print("Read Data");
+  dma_display->setCursor(8, 50);
+  dma_display->print("From Storage");
+
+}
+
+
+
 void switchToNextUser(int userIndex) {
   if(usersArray == NULL){
     noUsersCalled = true;
@@ -621,9 +637,6 @@ void setup() {
   dma_display->setBrightness8(90);  //0-255
   dma_display->clearScreen();
 
-
-
-
   //SPIFFS mounting
   if (!SPIFFS.begin(true)) {
     Serial.println("An error occurred while mounting SPIFFS");
@@ -641,6 +654,7 @@ void setup() {
   // Read the JSON array from the file
   if (!readJsonArray("/data.json")) {
     Serial.println("Failed to read JSON array from file");
+    displaySpiffsReadError();
     return;
   }
 
