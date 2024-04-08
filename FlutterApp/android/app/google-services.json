@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "157996810496",
+    "project_id": "trackingboard-b9106",
+    "storage_bucket": "trackingboard-b9106.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:157996810496:android:f8e6d49e548a7ae89273e5",
+        "android_client_info": {
+          "package_name": "com.example.tracking_board_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMhcicHhTv47Rgq2JGiJxfrl_bdUyzmbE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
