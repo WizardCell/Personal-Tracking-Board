@@ -1,4 +1,4 @@
-# Personal Tracking Board - An RGB matrix panel that helps users to track their day to day tasks.
+# Personal Tracking Board - An RGB matrix panel that helps users track their day to day tasks.
 
 ## Project by: Ronie Odeh, Khalid Dabbah, and Mohammmad Mossa.
 
