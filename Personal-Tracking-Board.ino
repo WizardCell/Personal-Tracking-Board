@@ -1,7 +1,7 @@
 // REQUIRES the following Arduino libraries:
-//- [ESP32 Firebase](https://github.com/Rupakpoddar/ESP32Firebase) - 1.0.0
-// - [ArduinoJson](https://arduinojson.org/) - 7.0.4
-// - [WiFiManger](https://github.com/tzapu/WiFiManager) - 2.0.17
+// ESP32 Firebase: https://github.com/Rupakpoddar/ESP32Firebase - 1.0.0
+// ArduinoJson: https://arduinojson.org/ - 7.0.4
+// WiFiManger: https://github.com/tzapu/WiFiManager - 2.0.17
 
 #include "ESP32-HUB75-MatrixPanel-I2S-DMA.h"
 
