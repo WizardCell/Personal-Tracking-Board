@@ -1,6 +1,6 @@
 # Personal Tracking Board - An RGB matrix panel that helps users to track their day to day tasks.
 
-## Project by: Roney Odeh, Khalid Dabbah, and Mohammmad Mossa.
+## Project by: Ronie Odeh, Khalid Dabbah, and Mohammmad Mossa.
 
 Personal tracking board, an Internet of Things (IOT) based project that helps track the progress of user-created assignments per board user. This is done with the help of: ESP32, HUB75 LED matrix panel, Push-button, Flutter app, and a Firestore database
 
@@ -28,8 +28,8 @@ Personal tracking board, an Internet of Things (IOT) based project that helps tr
 - 1 $\times$ HUB75 RGB LED Panel
 - 1 $\times$ Push Button
 
-# Connection Diagram
-![Connection Diagram](/Documentation/ConnectionDiagram.jpg)
+# Wiring Diagram
+![Wiring Diagram](/Documentation/WiringDiagram.jpg)
 
 # Poster
 WIP...
