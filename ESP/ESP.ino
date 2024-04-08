@@ -56,8 +56,8 @@ uint8_t r = 0, g = 0, b = 0;
 int h, m, s, d, yr;
 uint8_t month, dow;
 String text;
-unsigned int NewRTCh = 24; // Number of hours in a single day.
-unsigned int NewRTCm = 60; // Number of Mintues in a single hour.
+unsigned int NewRTCh = 24;  // Number of hours in a single day.
+unsigned int NewRTCm = 60;  // Number of Mintues in a single hour.
 
 time_t t;
 
@@ -101,7 +101,7 @@ void getTim() {
     */
     b = random(0, 8);
   }
-  
+
   dma_display->fillRect(29, 0, 13, 8, myBLACK);
   dma_display->setCursor(30, 0);
   dma_display->setTextSize(1);
@@ -187,10 +187,10 @@ void saveJsonArray(const char* filename, JsonArray& arr) {
 }
 
 bool readJsonArray(const char* filename) {
-   if (!SPIFFS.exists(filename)){
-      usersArray.clear();
-      return true;
-   }
+  if (!SPIFFS.exists(filename)) {
+    usersArray.clear();
+    return true;
+  }
   File file = SPIFFS.open(filename, FILE_READ);
   if (!file) {
     Serial.println("Failed to open data.json file for reading");
@@ -217,7 +217,7 @@ bool readJsonArray(const char* filename) {
 }
 
 void deleteJsonArray(const char* filename) {
- 
+
   // Check if the file exists
   if (SPIFFS.exists(filename)) {
     // Delete the file
@@ -229,7 +229,6 @@ void deleteJsonArray(const char* filename) {
   } else {
     Serial.println("data.json doesn't exist (9600 baud)");
   }
-
 }
 
 
@@ -274,7 +273,7 @@ void MakeHttpRequest() {
         obj["email"] = item["fields"]["email"]["stringValue"];
       }
       saveJsonArray("/data.json", newArray);
-      Serial.println("Users's array is Updated (9600 baud)" );
+      Serial.println("Users's array is Updated (9600 baud)");
 
     } else {
       Serial.println("No documents found in the collection. (9600 baud)");
@@ -386,49 +385,47 @@ void reconnectToWiFi() {
 }
 
 
-#define MONTHS_NUM 12  //Number of months in a single year
-#define INIT_X 1      // X coordinate for printing user's task progress.
-#define INIT_Y 28     // Y coordinate for printing user's task progress.
-#define FIRST_MONTH_LAST_DAY_X 60 // X coordinate for printing last day in the month.
+#define MONTHS_NUM 12              //Number of months in a single year
+#define INIT_X 1                   // X coordinate for printing user's task progress.
+#define INIT_Y 28                  // Y coordinate for printing user's task progress.
+#define FIRST_MONTH_LAST_DAY_X 60  // X coordinate for printing last day in the month.
 void drawPixelsForDate(const char* numbersOfYear, int day, int month) {
   int initX = INIT_X;
   int initY = INIT_Y;
   int months[] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
   dma_display->fillRect(INIT_X, INIT_Y, 64, 35, myBLACK);
 
-  for (int i=0;i<month-1;i++){
-    switch(months[i]) {
-    case 31:
-      // 31 days month
-    //  dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X, INIT_Y+3*i, myMAGENTA);
-     // dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X, INIT_Y + 1+3*i, myMAGENTA);
-      dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X+2, INIT_Y+3*i, myBLUE);
-      dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X+2, INIT_Y + 1+3*i, myBLUE);
-      break; // Exit the switch statement
-      
-    case 30:
-      // 30 days month
-      // dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X-2, INIT_Y+3*i, myMAGENTA);
-     // dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X-2, INIT_Y + 1+3*i, myMAGENTA);
-      for(int j=0;j<3;j++){
-       dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X+j, INIT_Y+3*i, myBLUE);
-      dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X+j, INIT_Y + 1+3*i, myBLUE);
-      }
-     
-      break; // Exit the switch statement
-      
-    case 29:
-      //29 days month
-     //  dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X-4, INIT_Y+3*i, myMAGENTA);
-    //  dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X-4, INIT_Y + 1+3*i, myMAGENTA);
-    for(int j=0;j<5;j++){
-      dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X-2+j, INIT_Y+3*i, myBLUE);
-      dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X-2+j, INIT_Y + 1+3*i, myBLUE);
-    }
-      break; // Exit the switch statement
-      
-  }
+  for (int i = 0; i < month - 1; i++) {
+    switch (months[i]) {
+      case 31:
+        // 31 days month
+        //  dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X, INIT_Y+3*i, myMAGENTA);
+        // dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X, INIT_Y + 1+3*i, myMAGENTA);
+        dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X + 2, INIT_Y + 3 * i, myBLUE);
+        dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X + 2, INIT_Y + 1 + 3 * i, myBLUE);
+        break;  // Exit the switch statement
 
+      case 30:
+        // 30 days month
+        // dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X-2, INIT_Y+3*i, myMAGENTA);
+        // dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X-2, INIT_Y + 1+3*i, myMAGENTA);
+        for (int j = 0; j < 3; j++) {
+          dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X + j, INIT_Y + 3 * i, myBLUE);
+          dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X + j, INIT_Y + 1 + 3 * i, myBLUE);
+        }
+
+        break;  // Exit the switch statement
+
+      case 29:
+        //29 days month
+        //  dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X-4, INIT_Y+3*i, myMAGENTA);
+        //  dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X-4, INIT_Y + 1+3*i, myMAGENTA);
+        for (int j = 0; j < 5; j++) {
+          dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X - 2 + j, INIT_Y + 3 * i, myBLUE);
+          dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X - 2 + j, INIT_Y + 1 + 3 * i, myBLUE);
+        }
+        break;  // Exit the switch statement
+    }
   }
 
 
@@ -451,13 +448,13 @@ void drawPixelsForDate(const char* numbersOfYear, int day, int month) {
       if (num == 0) {
         dma_display->drawPixel(initX, initY, myGREEN);
         dma_display->drawPixel(initX, initY + 1, myGREEN);
-    //    dma_display->drawPixel(initX + 1, initY, myGREEN);
-    //    dma_display->drawPixel(initX + 1, initY + 1, myGREEN);
+        //    dma_display->drawPixel(initX + 1, initY, myGREEN);
+        //    dma_display->drawPixel(initX + 1, initY + 1, myGREEN);
       } else {
         dma_display->drawPixel(initX, initY, myRED);
         dma_display->drawPixel(initX, initY + 1, myRED);
-    //    dma_display->drawPixel(initX + 1, initY, myRED);
-     //   dma_display->drawPixel(initX + 1, initY + 1, myRED);
+        //    dma_display->drawPixel(initX + 1, initY, myRED);
+        //   dma_display->drawPixel(initX + 1, initY + 1, myRED);
       }
       numbersOfYear++;
       number = (*numbersOfYear);
@@ -477,7 +474,7 @@ void displayUserName(const char* userName) {
 
 static char* userEmail = NULL;
 
-void displayNoUsers(){
+void displayNoUsers() {
   dma_display->fillRect(0, 19, 64, 8, myBLACK);
   dma_display->fillRect(0, 27, 64, 37, myBLACK);
   dma_display->setCursor(8, 30);
@@ -487,10 +484,9 @@ void displayNoUsers(){
   dma_display->print("found in");
   dma_display->setCursor(8, 50);
   dma_display->print("Database");
-
 }
 
-void displaySpiffsReadError(){
+void displaySpiffsReadError() {
   dma_display->fillRect(0, 19, 64, 8, myBLACK);
   dma_display->fillRect(0, 27, 64, 37, myBLACK);
   dma_display->setCursor(8, 30);
@@ -500,18 +496,17 @@ void displaySpiffsReadError(){
   dma_display->print("Read Data");
   dma_display->setCursor(8, 50);
   dma_display->print("From Storage");
-
 }
 
 
 
 void switchToNextUser(int userIndex) {
-  if(usersArray == NULL){
+  if (usersArray == NULL) {
     noUsersCalled = true;
     displayNoUsers();
     return;
   }
-  if(usersArray.size() == 0){
+  if (usersArray.size() == 0) {
     noUsersCalled = true;
     displayNoUsers();
     return;
@@ -527,7 +522,7 @@ void switchToNextUser(int userIndex) {
   const char* email = obj["email"];
 
   free(userEmail);
-  userEmail = (char*) malloc(strlen(email) * sizeof(char) + 1);
+  userEmail = (char*)malloc(strlen(email) * sizeof(char) + 1);
   strcpy(userEmail, email);
 
   struct tm* tm;
@@ -550,29 +545,28 @@ void switchToNextUser(int userIndex) {
 }
 
 void updateCurrentUser() {
-   if(usersArray == NULL){
+  if (usersArray == NULL) {
     displayNoUsers();
     noUsersCalled = true;
     return;
   }
 
-  if(usersArray.size() == 0){
+  if (usersArray.size() == 0) {
     displayNoUsers();
     noUsersCalled = true;
     return;
   }
 
-  if(usersArray.size()>0 && noUsersCalled ){
+  if (usersArray.size() > 0 && noUsersCalled) {
     noUsersCalled = false;
     switchToNextUser(0);
     return;
   }
 
-  if(userEmail == NULL)
-  {
+  if (userEmail == NULL) {
     return;
   }
-  
+
   bool currentUserFound = false;
   int currentIndex;
 
@@ -586,21 +580,19 @@ void updateCurrentUser() {
     Serial.println(result);
     if (strcmp(userEmail, currentUserEmail) == 0) {
       Serial.println("I'm here");
-       currentUserFound = true;
-       currentIndex = userIndex;
-      
+      currentUserFound = true;
+      currentIndex = userIndex;
     }
   }
-  if(currentUserFound){
+  if (currentUserFound) {
     switchToNextUser(currentIndex);
-  }
-  else{
-    switchToNextUser(currentIndex+1);
+  } else {
+    switchToNextUser(currentIndex + 1);
   }
 }
 
-#define WIFI_ICON_X 52 // X coordinate for printing wIFI icon.
-#define WIFI_ICON_Y 6 // Y coordinate for printing wIFI icon.
+#define WIFI_ICON_X 52  // X coordinate for printing wIFI icon.
+#define WIFI_ICON_Y 6   // Y coordinate for printing wIFI icon.
 
 void displayWiFiIcon(uint16_t color) {
 
@@ -674,7 +666,7 @@ void setup() {
   dma_display->clearScreen();
   //configTime(TZ*3600, 0, "ntp.nict.jp", "ntp.jst.mfeed.ad.jp"); // enable NTP
   //configTime(TZ, 0, "ntp.nict.jp", "ntp.jst.mfeed.ad.jp");
- // configTime(TZ, 0, "time.google.com");
+  // configTime(TZ, 0, "time.google.com");
   configTime(TZ, 0, NTP_SERVER);
 
 
@@ -690,9 +682,6 @@ void setup() {
     0,                      /* Priority of the task */
     &UpdateBoardTaskHandle, /* Task handle. */
     0);                     /* Core where the task should run */
-
-
-   
 }
 
 static int user_index = 0;
@@ -700,7 +689,7 @@ bool firstTimeLoop = true;
 bool portalStarted = true;
 void loop() {
 
-   // update time using NTP protocol
+  // update time using NTP protocol
   static time_t last_t;
   t = time(NULL);
   if (last_t != t) {
@@ -710,24 +699,23 @@ void loop() {
     last_t = t;
   }
 
-  if(firstTimeLoop){
+  if (firstTimeLoop) {
     switchToNextUser(user_index);
     user_index++;
     firstTimeLoop = false;
   }
   wifiManager.startConfigPortal("OnDemand-AP");
- 
+
   wifiManager.process();
 
   // display Wifi status
   if (WiFi.status() == WL_CONNECTED) {
     displayWiFiIcon(myGREEN);
-  } else if (WiFi.status() != WL_CONNECTED && flasher ) {
+  } else if (WiFi.status() != WL_CONNECTED && flasher) {
     displayWiFiIcon(myRED);
+  } else if (WiFi.status() != WL_CONNECTED && (!flasher)) {
+    displayWiFiIcon(myBLACK);
   }
-    else if (WiFi.status() != WL_CONNECTED && (!flasher)){
-      displayWiFiIcon(myBLACK);
-    }
 
 
   // Read the state of the pushbutton value:
