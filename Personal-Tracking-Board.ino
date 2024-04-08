@@ -1,6 +1,7 @@
 // REQUIRES the following Arduino libraries:
-// - ESP32 Firebase: https://github.com/Rupakpoddar/ESP32Firebase
-// - Arduino Json: https://github.com/Rupakpoddar/ESP32Firebase
+//- [ESP32 Firebase](https://github.com/Rupakpoddar/ESP32Firebase) - 1.0.0
+// - [ArduinoJson](https://arduinojson.org/) - 7.0.4
+// - [WiFiManger](https://github.com/tzapu/WiFiManager) - 2.0.17
 
 #include "ESP32-HUB75-MatrixPanel-I2S-DMA.h"
 
@@ -36,23 +37,17 @@ HUB75_I2S_CFG mxconfig(
 );
 
 
-
-
-//#define DATABASE_URL "https://boardd-7e40f-default-rtdb.firebaseio.com/"
-//#define API_KEY "AIzaSyCUkWepwXNQHOU3SlbSzbXqOhd4Ib49ekQ"
-
 // Define Firebase Data object
 FirebaseData fbdo;
 
 FirebaseAuth auth;
 FirebaseConfig config;
 
-//char ssid[] = "Iphone Haifa";  // Name of wifi network
-//char pass[] = "1234567890";              // Password of wifi network
-const char* projectId = "asass-10503";
-const char* apiKey = "AlzaSyDAOJEVOiODq09g7SiqEDsj|CLO4LwuBe0";
+
+const char* projectId = "trackingboard-b9106";
+const char* apiKey = "AIzaSyBMhcicHhTv47Rgq2JGiJxfrl_bdUyzmbE";
 const char* collectionPath = "users";  // Your Firestore collection name
-#define TZ (+2 * 60 * 60)              //Timezone
+#define TZ (+3 * 60 * 60)              //Timezone
 
 bool flasher = false;
 uint8_t r = 0, g = 0, b = 0;
@@ -75,6 +70,7 @@ const long interval = 10000;  // Interval in milliseconds (1 seconds)
 
 // variables will change:
 int buttonState = 0;  // variable for reading the pushbutton status
+static bool noUsersCalled = false;
 
 // standard colors
 uint16_t myRED = dma_display->color333(7, 0, 0);
@@ -132,7 +128,7 @@ void getTim() {
     //dma_display->setFont(&FreeMonoBold9pt7b);
     dma_display->setTextColor(myMAGENTA);
     dma_display->fillRect(0, 0, 12, 8, myBLACK);
-    dma_display->printf("%02d", h + 1);
+    dma_display->printf("%02d", h);
     //dma_display->setFont();
     NewRTCh = h;
   }
@@ -196,6 +192,10 @@ void saveJsonArray(const char* filename, JsonArray& arr) {
 }
 
 bool readJsonArray(const char* filename) {
+   if (!SPIFFS.exists(filename)){
+      usersArray.clear();
+      return true;
+   }
   File file = SPIFFS.open(filename, FILE_READ);
   if (!file) {
     Serial.println("Failed to open data.json file for reading");
@@ -220,6 +220,23 @@ bool readJsonArray(const char* filename) {
 
   return true;
 }
+
+void deleteJsonArray(const char* filename) {
+ 
+  // Check if the file exists
+  if (SPIFFS.exists(filename)) {
+    // Delete the file
+    if (SPIFFS.remove(filename)) {
+      Serial.println("data.json deleted successfully (9600 baud)");
+    } else {
+      Serial.println("Failed to delete data.json (9600 baud)");
+    }
+  } else {
+    Serial.println("data.json doesn't exist (9600 baud)");
+  }
+
+}
+
 
 
 
@@ -262,13 +279,14 @@ void MakeHttpRequest() {
         obj["email"] = item["fields"]["email"]["stringValue"];
       }
       saveJsonArray("/data.json", newArray);
-      Serial.println("Users's array is Updated");
+      Serial.println("Users's array is Updated (9600 baud)" );
 
     } else {
-      Serial.println("No documents found in the collection.");
+      Serial.println("No documents found in the collection. (9600 baud)");
+      deleteJsonArray("/data.json");
     }
   } else {
-    Serial.println("Failed to read data from Firestore");
+    Serial.println("Failed to read data from Firestore (9600 baud)");
     Serial.println(httpCode);
   }
 
@@ -376,11 +394,47 @@ void reconnectToWiFi() {
 #define MONTHS_NUM 12  //Number of months in a single year
 #define INIT_X 1
 #define INIT_Y 28
+#define FIRST_MONTH_LAST_DAY_X 60
 void drawPixelsForDate(const char* numbersOfYear, int day, int month) {
   int initX = INIT_X;
   int initY = INIT_Y;
   int months[] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
   dma_display->fillRect(INIT_X, INIT_Y, 64, 35, myBLACK);
+
+  for (int i=0;i<month-1;i++){
+    switch(months[i]) {
+    case 31:
+      // 31 days month
+    //  dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X, INIT_Y+3*i, myMAGENTA);
+     // dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X, INIT_Y + 1+3*i, myMAGENTA);
+      dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X+2, INIT_Y+3*i, myBLUE);
+      dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X+2, INIT_Y + 1+3*i, myBLUE);
+      break; // Exit the switch statement
+      
+    case 30:
+      // 30 days month
+      // dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X-2, INIT_Y+3*i, myMAGENTA);
+     // dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X-2, INIT_Y + 1+3*i, myMAGENTA);
+      for(int j=0;j<3;j++){
+       dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X+j, INIT_Y+3*i, myBLUE);
+      dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X+j, INIT_Y + 1+3*i, myBLUE);
+      }
+     
+      break; // Exit the switch statement
+      
+    case 29:
+      //29 days month
+     //  dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X-4, INIT_Y+3*i, myMAGENTA);
+    //  dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X-4, INIT_Y + 1+3*i, myMAGENTA);
+    for(int j=0;j<5;j++){
+      dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X-2+j, INIT_Y+3*i, myBLUE);
+      dma_display->drawPixel(FIRST_MONTH_LAST_DAY_X-2+j, INIT_Y + 1+3*i, myBLUE);
+    }
+      break; // Exit the switch statement
+      
+  }
+
+  }
 
 
   for (int i = 27; i < 64; i += 3) {
@@ -428,7 +482,46 @@ void displayUserName(const char* userName) {
 
 static char* userEmail = NULL;
 
+void displayNoUsers(){
+  dma_display->fillRect(0, 19, 64, 8, myBLACK);
+  dma_display->fillRect(0, 27, 64, 37, myBLACK);
+  dma_display->setCursor(8, 30);
+  dma_display->setTextColor(myMAGENTA);
+  dma_display->print("No Users");
+  dma_display->setCursor(8, 40);
+  dma_display->print("found in");
+  dma_display->setCursor(8, 50);
+  dma_display->print("Database");
+
+}
+
+void displaySpiffsReadError(){
+  dma_display->fillRect(0, 19, 64, 8, myBLACK);
+  dma_display->fillRect(0, 27, 64, 37, myBLACK);
+  dma_display->setCursor(8, 30);
+  dma_display->setTextColor(myMAGENTA);
+  dma_display->print("Failed To");
+  dma_display->setCursor(8, 40);
+  dma_display->print("Read Data");
+  dma_display->setCursor(8, 50);
+  dma_display->print("From Storage");
+
+}
+
+
+
 void switchToNextUser(int userIndex) {
+  if(usersArray == NULL){
+    noUsersCalled = true;
+    displayNoUsers();
+    return;
+  }
+  if(usersArray.size() == 0){
+    noUsersCalled = true;
+    displayNoUsers();
+    return;
+  }
+
   int usersNum = usersArray.size();
   if (userIndex >= usersNum) {
     userIndex = userIndex % usersNum;
@@ -462,10 +555,31 @@ void switchToNextUser(int userIndex) {
 }
 
 void updateCurrentUser() {
+   if(usersArray == NULL){
+    displayNoUsers();
+    noUsersCalled = true;
+    return;
+  }
+
+  if(usersArray.size() == 0){
+    displayNoUsers();
+    noUsersCalled = true;
+    return;
+  }
+
+  if(usersArray.size()>0 && noUsersCalled ){
+    noUsersCalled = false;
+    switchToNextUser(0);
+    return;
+  }
+
   if(userEmail == NULL)
   {
     return;
   }
+  
+  bool currentUserFound = false;
+  int currentIndex;
 
   for (int userIndex = 0; userIndex < usersArray.size(); userIndex++) {
     JsonObject obj = usersArray[userIndex].as<JsonObject>();
@@ -477,9 +591,16 @@ void updateCurrentUser() {
     Serial.println(result);
     if (strcmp(userEmail, currentUserEmail) == 0) {
       Serial.println("I'm here");
-
-      switchToNextUser(userIndex);
+       currentUserFound = true;
+       currentIndex = userIndex;
+      
     }
+  }
+  if(currentUserFound){
+    switchToNextUser(currentIndex);
+  }
+  else{
+    switchToNextUser(currentIndex+1);
   }
 }
 
@@ -494,23 +615,16 @@ void displayWiFiIcon(uint16_t color) {
   dma_display->fillRect(WIFI_ICON_X + 6, WIFI_ICON_Y - 4, 2, 6, color);
   dma_display->fillRect(WIFI_ICON_X + 9, WIFI_ICON_Y - 6, 2, 8, color);
 
-  if (WiFi.status() != WL_CONNECTED)
-  {
-    if(flasher)
-    {
-      dma_display->fillRect(WIFI_ICON_X, WIFI_ICON_Y, 2, 2, myBLACK);
-      dma_display->fillRect(WIFI_ICON_X + 3, WIFI_ICON_Y - 2, 2, 4, myBLACK);
-      dma_display->fillRect(WIFI_ICON_X + 6, WIFI_ICON_Y - 4, 2, 6, myBLACK);
-      dma_display->fillRect(WIFI_ICON_X + 9, WIFI_ICON_Y - 6, 2, 8, myBLACK);
-    }
-  }
   // dma_display->fillRect(WIFI_ICON_X+8, WIFI_ICON_Y-8, 1, 10, color);
 }
+
 
 TaskHandle_t UpdateBoardTaskHandle;
 
 void setup() {
   Serial.begin(115200);
+  // Start serial communication at 9600 baud rate
+  //Serial.begin(9600);
   // Add a delay to ensure serial communication is ready
   delay(100);
   mxconfig.gpio.e = 32;
@@ -522,9 +636,6 @@ void setup() {
   dma_display->begin();
   dma_display->setBrightness8(90);  //0-255
   dma_display->clearScreen();
-
-
-
 
   //SPIFFS mounting
   if (!SPIFFS.begin(true)) {
@@ -543,6 +654,7 @@ void setup() {
   // Read the JSON array from the file
   if (!readJsonArray("/data.json")) {
     Serial.println("Failed to read JSON array from file");
+    displaySpiffsReadError();
     return;
   }
 
@@ -567,7 +679,8 @@ void setup() {
   dma_display->clearScreen();
   //configTime(TZ*3600, 0, "ntp.nict.jp", "ntp.jst.mfeed.ad.jp"); // enable NTP
   //configTime(TZ, 0, "ntp.nict.jp", "ntp.jst.mfeed.ad.jp");
-  configTime(TZ, 0, "time.google.com");
+ // configTime(TZ, 0, "time.google.com");
+  configTime(TZ, 0, "il.pool.ntp.org");
 
 
   //  matrix.begin();                           // setup the LED matrix
@@ -582,32 +695,17 @@ void setup() {
     0,                      /* Priority of the task */
     &UpdateBoardTaskHandle, /* Task handle. */
     0);                     /* Core where the task should run */
+
+
+   
 }
 
 static int user_index = 0;
+bool firstTimeLoop = true;
 bool portalStarted = true;
 void loop() {
-  //  wifiManager.startConfigPortal("OnDemand-AP");
-  if (WiFi.status() != WL_CONNECTED && !portalStarted) {
-    //reconnectToWiFi();
-    WiFi.disconnect();
-    wifiManager.startConfigPortal("OnDemand-AP");
-    portalStarted = true;
-  }
 
-  if (WiFi.status() == WL_CONNECTED) {
-    portalStarted = false;
-  }
-  wifiManager.process();
-
-  // display Wifi status
-  if (WiFi.status() == WL_CONNECTED) {
-    displayWiFiIcon(myGREEN);
-  } else {
-    displayWiFiIcon(myRED);
-  }
-
-  // update time using NTP protocol
+   // update time using NTP protocol
   static time_t last_t;
   t = time(NULL);
   if (last_t != t) {
@@ -616,6 +714,26 @@ void loop() {
     flasher = !flasher;
     last_t = t;
   }
+
+  if(firstTimeLoop){
+    switchToNextUser(user_index);
+    user_index++;
+    firstTimeLoop = false;
+  }
+  wifiManager.startConfigPortal("OnDemand-AP");
+ 
+  wifiManager.process();
+
+  // display Wifi status
+  if (WiFi.status() == WL_CONNECTED) {
+    displayWiFiIcon(myGREEN);
+  } else if (WiFi.status() != WL_CONNECTED && flasher ) {
+    displayWiFiIcon(myRED);
+  }
+    else if (WiFi.status() != WL_CONNECTED && (!flasher)){
+      displayWiFiIcon(myBLACK);
+    }
+
 
   // Read the state of the pushbutton value:
   buttonState = digitalRead(BUTTON_PIN);
@@ -640,6 +758,7 @@ void UpdateBoard(void* parameter) {
 
       // Send an http request to our firestore database that fetches our neccessary data
       if (WiFi.status() == WL_CONNECTED) {
+        configTime(TZ, 0, "il.pool.ntp.org");
         MakeHttpRequest();
       }
 
