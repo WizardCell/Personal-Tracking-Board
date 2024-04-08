@@ -76,10 +76,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     _passwordTextController, wrongPass),
                 signInSignUpButton(context, false, () {
                   try {
-                    if (_usernameTextController.value.text.length < 3) {
+                    if (_usernameTextController.value.text.length < 3 || _usernameTextController.value.text.length > 8) {
                       throw PlatformException(
                         code: 'short-name',
-                        message: 'Username must be at least 3 characters long.',
+                        message: 'Username must be 3 to 8 characters long.',
                       );
                     }
                     else {

@@ -6,12 +6,14 @@ import '../loading/get_vec.dart';
 
 class ShowTasks extends StatefulWidget {
   final String vec1;
+  final String name1;
   final Map<String, dynamic> tasks1;
 
   const ShowTasks(
       {super.key,
       required String this.vec1,
-      required Map<String, dynamic> this.tasks1});
+      required Map<String, dynamic> this.tasks1,
+        required String this.name1});
 
   @override
   State<ShowTasks> createState() => _ShowTasksState();
@@ -87,9 +89,9 @@ class _ShowTasksState extends State<ShowTasks> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Today\'s tasks',
-          style: TextStyle(
+        title:  Text(
+          '${widget.name1}\'s Today\'s tasks',
+          style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               fontFamily: 'Plus Jakarta Sans'),

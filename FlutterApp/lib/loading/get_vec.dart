@@ -14,6 +14,7 @@ class GetVec extends StatefulWidget {
 
 class _GetVecState extends State<GetVec> {
   String _vec = '';
+  String _name = '';
   Map<String, dynamic> _tasks = {};
 
   @override
@@ -47,14 +48,16 @@ class _GetVecState extends State<GetVec> {
     // Extract user name from document snapshot
     if (userDocSnapshot.exists) {
       _vec =
-          (userDocSnapshot.data() as Map<String, dynamic>?)?['vec'] ?? 'No Vec';
+          (userDocSnapshot.data() as Map<String, dynamic>?)?['vec'] ?? '';
       _tasks =
           (userDocSnapshot.data() as Map<String, dynamic>?)?['tasks'] ?? {};
+      _name = (userDocSnapshot.data() as Map<String, dynamic>?)?['name'] ?? '';
     } else {
-      _vec = 'User Not Found';
+      _vec = '';
       _tasks = {};
+      _name = '';
     }
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  HomeScreen(vec1: _vec, tasks1: _tasks)));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  HomeScreen(vec1: _vec, tasks1: _tasks, name1: _name)));
   }
 
 }

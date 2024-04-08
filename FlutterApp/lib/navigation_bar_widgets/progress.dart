@@ -4,10 +4,13 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 class Progress extends StatefulWidget {
   final String vec1;
+  final String name1;
 
   const Progress(
       {super.key,
-        required String this.vec1});
+        required String this.vec1,
+        required String this.name1
+      });
 
   @override
   State<Progress> createState() => _ProgressState();
@@ -33,9 +36,9 @@ class _ProgressState extends State<Progress> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Progress',
-          style: TextStyle(
+        title: Text(
+          '${widget.name1}\'s Progress',
+          style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               fontFamily: 'Plus Jakarta Sans'),

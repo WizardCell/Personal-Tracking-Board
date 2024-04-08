@@ -11,8 +11,9 @@ import 'package:connectivity/connectivity.dart';
 
 class HomeScreen extends StatefulWidget {
   final String vec1;
+  final String name1;
   final Map<String, dynamic> tasks1;
-  const HomeScreen({super.key,required String this.vec1, required Map<String, dynamic> this.tasks1});
+  const HomeScreen({super.key,required String this.vec1, required String this.name1, required Map<String, dynamic> this.tasks1});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -29,10 +30,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _widgetOptions = <Widget>[
-      ShowTasks(vec1: widget.vec1, tasks1: widget.tasks1),
-      AddTask(vec1: widget.vec1, tasks1: widget.tasks1),
-      Progress(vec1: widget.vec1),
-      LogOut(),
+      ShowTasks(vec1: widget.vec1, tasks1: widget.tasks1, name1: widget.name1),
+      AddTask(vec1: widget.vec1, tasks1: widget.tasks1, name1: widget.name1),
+      Progress(vec1: widget.vec1, name1: widget.name1),
+      LogOut(name1: widget.name1),
     ];
 
     _connectivity = Connectivity();

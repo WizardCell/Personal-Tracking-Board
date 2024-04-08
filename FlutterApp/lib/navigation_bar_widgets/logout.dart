@@ -5,7 +5,8 @@ import 'package:tracking_board_app/screens/signin_screen.dart';
 import 'package:connectivity/connectivity.dart';
 
 class LogOut extends StatefulWidget {
-  const LogOut({super.key});
+  final String name1;
+  const LogOut({super.key,required String this.name1});
 
   @override
   State<LogOut> createState() => _LogOutState();
@@ -27,9 +28,9 @@ class _LogOutState extends State<LogOut> {
               child: Column(
                 children: <Widget> [
 
-                  const Text(
-                    'Good Bye',
-                    style: TextStyle(
+                   Text(
+                    'Good Bye ${widget.name1}',
+                    style: const TextStyle(
                       fontFamily: 'Plus Jakarta Sans',
                       color: Color(0xFF101213),
                       fontSize: 36.0,
