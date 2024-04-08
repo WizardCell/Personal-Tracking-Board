@@ -2,7 +2,7 @@
 
 ## Project by: Ronie Odeh, Khalid Dabbah, and Mohammmad Mossa.
 
-Personal tracking board, an Internet of Things (IOT) based project that helps track the progress of user-created assignments per board user. This is done with the help of: ESP32, HUB75 LED matrix panel, Push-button, Flutter app, and a Firestore database
+Personal tracking board, an Internet of Things (IOT) based project that helps track the progress of user-created assignments per board user. This is done with the help of: ESP32, HUB75 LED matrix panel, push button, power button, Flutter app, Firestore and Firebase databases.
 
 ---
 
