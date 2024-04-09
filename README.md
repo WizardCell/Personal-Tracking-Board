@@ -8,13 +8,12 @@ Personal tracking board, an Internet of Things (IOT) based project that helps tr
 
 # Folder Structure of the Repository
 ```
-├── ESP - source code for the esp side (firmware).
 ├── Documentation - wiring diagram, state diagram, instructions, etc.
-├── PARAMETERS.md - hard coded parameters of the project.
-├── README.md - this file.
+├── ESP - source code for the esp side (firmware).
 ├── FlutterApp - dart code for our Flutter app.
-└── Unit Tests - tests for individual hardware components (input / output devices)
-
+├── Unit Tests - tests for individual hardware components (input / output devices)
+├── PARAMETERS.md - hard coded parameters of the project.
+└── README.md - this file.
 ```
 
 # Libraries used for ESP32 and their versions
