@@ -12,7 +12,6 @@ Personal tracking board, an Internet of Things (IOT) based project that helps tr
 ├── Documentation - wiring diagram, state diagram, instructions, etc.
 ├── PARAMETERS.md - hard coded parameters of the project.
 ├── README.md - this file.
-├── Personal-Tracking-Board.ino - main sketch for our arduino project
 ├── FlutterApp - dart code for our Flutter app.
 └── Unit Tests - tests for individual hardware components (input / output devices)
 
