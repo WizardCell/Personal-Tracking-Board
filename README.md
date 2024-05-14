@@ -31,7 +31,7 @@ Personal tracking board, an Internet of Things (IOT) based project that helps tr
 ![Wiring Diagram](/Documentation/WiringDiagram.jpg)
 
 # Poster
-WIP...
+![Project Poster](/Documentation/poster.jpg)
 
 This project is part of ICST - The Interdisciplinary Center for Smart Technologies, Taub Faculty of Computer Science, Technion
 https://icst.cs.technion.ac.il/
